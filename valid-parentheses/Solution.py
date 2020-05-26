@@ -1,24 +1,17 @@
 class Solution:
     def isValid(self, s: str) -> bool:
-        brackets = {"(":")", ")":"(", "[":"]", "]":"[", "{":"}", "}":"{"}
+        brackets = {"(":")", "[":"]", "{":"}"}
         stack = []
-        top = -1
-        for c in s:
-            if top < 0:
-                stack.append(c)
-                top += 1
-            else:
-                if stack[top] != brackets[c]:
-                    stack.append(c)
-                    top += 1
-                else:
-                    stack.pop()
-                    top -= 1
         
-        if top == -1:
-            return True 
-
-        return False
+        for c in s:
+            if c in brackets.keys():
+                stack.append(c)
+            elif stack and c == brackets[stack[-1]]:
+                stack.pop()
+            else:
+                return False
+                    
+        return stack == []
 
 if __name__ == "__main__":
     s = Solution()

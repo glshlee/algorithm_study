@@ -15,6 +15,7 @@ r= 0 ,c = 1
 result = 16
 */
 
+
 class Node{
     int x,y;
     int val;
@@ -53,17 +54,17 @@ class Node{
 
 public class Kakao6 {
     static int arr[][] = new int[][] {
-            {3,0,0,2},
-            {0,0,1,0},
-            {0,1,0,0},
-            {2,0,0,3}
+            {1,0,0,3},
+            {2,0,0,0},
+            {0,0,0,2},
+            {3,0,1,0}
     };
-    static int RESULT = Integer.MAX_VALUE;
+    static int MIN = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
         Kakao6 kk = new Kakao6();
 
-        int r= 0,c=1;
+        int r= 1,c=0;
         int cnt=0;
 
         List nodes = new ArrayList<Node>();
@@ -76,81 +77,46 @@ public class Kakao6 {
             }
         }
         kk.D(r,c,cnt,nodes);
-
-        System.out.println(RESULT);
+        System.out.println(MIN);
     }
 
     void D( int x,int y,int cnt,List<Node> list) {
-
-//        System.out.print(x+" "+y+": ");
-//        for (int i = 0; i < list.size(); i++) {
-//            System.out.print(list.get(i).getVal());
-//        }
-//        System.out.println();
-        ////////////////////////////////////////////////////////
         Node fd = null;
 
         if(list.size() ==0 ) {
-            if(Kakao6.RESULT> cnt){
-                RESULT = cnt;
+            if(MIN > cnt) {
+                MIN = cnt;
             }
             return;
         }
 
-        //아직 start node 못찾은것
-        if(list.size()%2 == 0) {
-            //가장 왼쪽에 있는 노드를 스타트로  선택
-            for(int i=0; i< list.size();i++ ) {
-                Node nd = list.get(i);
-                int nx = nd.getX();
-                int ny = nd.getY();
+        for(int i=0; i< list.size();i++ ) {
+            Node nd = list.get(i);
+            int nx = nd.getX();
+            int ny = nd.getY();
+            List <Node> node = new ArrayList<Node>(list);
 
-                ////////////////////////////////////////////////////////
-                //cnt 찾기
-                int tt= cnt;
-                if(nx != x && ny == y ) {
-                    tt= cnt +2;
-                }else if(ny != y && nx == x) {
-                    tt = cnt+2;
-                }else if(nx==x && ny==y) {
-                    tt = cnt+1;
-                }else if(nx!=x && ny!=y) {
-                    tt = cnt+3;
-                }
-                ////////////////////////////////////////////////////////
-                List <Node> node = new ArrayList<Node>(list);
-                node.remove(i);
-                D(nx,ny,tt,node);
+            int calCnt= cnt;
+
+            if(nx != x && ny == y ) {
+                calCnt= cnt +2;
+            }else if(ny != y && nx == x) {
+                calCnt = cnt+2;
+            }else if(nx==x && ny==y) {
+                calCnt = cnt+1;
+            }else if(nx!=x && ny!=y) {
+                calCnt = cnt+3;
             }
 
-        }else {// start 노드 찾은것
-            fd = new Node(x,y,arr[x][y]);
-
-            for(int i=0; i< list.size();i++ ) {
-                Node nd = list.get(i);
-                int nx = nd.getX();
-                int ny = nd.getY();
-
-                ////////////////////////////////////////////////////////
-                //cnt 찾기
-                int tt= cnt;
-                if(nx != x && ny == y ) {
-                    tt= cnt +2;
-                }else if(ny != y && nx == x) {
-                    tt = cnt+2;
-                }else if(nx==x && ny==y) {
-                    tt = cnt+1;
-                }else if(nx!=x && ny!=y) {
-                    tt = cnt+3;
-                }
-                ////////////////////////////////////////////////////////
-                List <Node> node = new ArrayList<Node>(list);
+            if(list.size()%2 == 0) {
+                node.remove(i);
+                D(nx,ny,calCnt,node);
+            }else {
+                fd = new Node(x,y,arr[x][y]);
 
                 if(nd.getVal() == fd.getVal() ) {
                     node.remove(i);
-                    D(nx,ny,tt,node);
-                }else {
-                    continue;
+                    D(nx,ny,calCnt,node);
                 }
             }
         }
